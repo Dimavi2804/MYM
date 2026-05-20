@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f5f1ea"/>
+  <rect x="240" y="165" width="320" height="580" rx="24" fill="#426b91"/>
+  <circle cx="400" cy="285" r="16" fill="#d6b06a"/>
+  <circle cx="400" cy="385" r="16" fill="#d6b06a"/>
+  <circle cx="400" cy="485" r="16" fill="#d6b06a"/>
+  <circle cx="400" cy="585" r="16" fill="#d6b06a"/>
+  <text x="400" y="835" text-anchor="middle" font-family="Inter, Arial" font-size="38" font-weight="700" fill="#181818">Botones frontales</text>
+</svg>

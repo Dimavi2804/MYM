@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f5f1ea"/>
+  <path d="M190 440h420c80 0 120 48 120 120v40H125v-55c0-58 24-105 65-105z" fill="#f7f4ee"/>
+  <path d="M140 620h580" stroke="#181818" stroke-width="24" stroke-linecap="round"/>
+  <path d="M350 470 470 590M430 465l120 125" stroke="#b65050" stroke-width="14"/>
+  <text x="400" y="795" text-anchor="middle" font-family="Inter, Arial" font-size="38" font-weight="700" fill="#181818">Suela firme</text>
+</svg>

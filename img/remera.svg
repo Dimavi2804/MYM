@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#d9e5e2"/>
+  <path d="M275 120h250l115 130-90 100-50-48v535H300V302l-50 48-90-100z" fill="#f8f8f4"/>
+  <circle cx="400" cy="240" r="72" fill="#d9e5e2"/>
+  <rect x="310" y="475" width="180" height="42" rx="21" fill="#222"/>
+  <text x="400" y="940" text-anchor="middle" font-family="Inter, Arial" font-size="42" font-weight="700" fill="#181818">Remera</text>
+</svg>

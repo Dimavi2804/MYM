@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f0ece5"/>
+  <rect x="210" y="180" width="380" height="520" rx="28" fill="#202020"/>
+  <path d="M270 270h260M270 370h260M270 470h260M270 570h260" stroke="#4c4c4c" stroke-width="16"/>
+  <text x="400" y="805" text-anchor="middle" font-family="Inter, Arial" font-size="38" font-weight="700" fill="#181818">Corte recto</text>
+</svg>

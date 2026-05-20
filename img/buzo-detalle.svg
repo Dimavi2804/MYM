@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f4efe7"/>
+  <rect x="185" y="170" width="430" height="560" rx="40" fill="#9c9c96"/>
+  <path d="M255 310h290M255 395h290M255 480h290M255 565h290" stroke="#c7c7bf" stroke-width="20"/>
+  <text x="400" y="820" text-anchor="middle" font-family="Inter, Arial" font-size="38" font-weight="700" fill="#181818">Frizado interior</text>
+</svg>

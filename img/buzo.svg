@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#e5e0d7"/>
+  <path d="M280 135h240l65 105v610H215V240z" fill="#9c9c96"/>
+  <path d="M310 135c10 90 170 90 180 0" fill="#d7d5cf"/>
+  <path d="M290 360h220v130H290z" fill="#7c7c77"/>
+  <path d="M215 255 120 690h105zM585 255l95 435H575z" fill="#8a8a84"/>
+  <text x="400" y="940" text-anchor="middle" font-family="Inter, Arial" font-size="42" font-weight="700" fill="#181818">Buzo</text>
+</svg>

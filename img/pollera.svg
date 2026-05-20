@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#ded9cf"/>
+  <path d="M300 140h200l120 690H180z" fill="#426b91"/>
+  <rect x="285" y="140" width="230" height="74" rx="10" fill="#315776"/>
+  <path d="M400 220v575M292 235 230 800M508 235l62 565" stroke="#88a9c7" stroke-width="12"/>
+  <text x="400" y="940" text-anchor="middle" font-family="Inter, Arial" font-size="42" font-weight="700" fill="#181818">Pollera</text>
+</svg>

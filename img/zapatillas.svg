@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#e8e3d9"/>
+  <path d="M145 570c160 15 245-45 335-130 70 55 125 105 210 130 35 10 54 44 43 78-10 33-40 52-75 52H185c-52 0-84-55-58-100 5-9 11-19 18-30z" fill="#f7f4ee"/>
+  <path d="M165 695h520" stroke="#181818" stroke-width="24" stroke-linecap="round"/>
+  <path d="M350 505h170M315 555h230" stroke="#181818" stroke-width="14"/>
+  <text x="400" y="940" text-anchor="middle" font-family="Inter, Arial" font-size="42" font-weight="700" fill="#181818">Calzado</text>
+</svg>

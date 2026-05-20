@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#e7ded0"/>
+  <rect x="110" y="90" width="580" height="820" rx="34" fill="#58705a"/>
+  <path d="M270 90h260l-70 170H340z" fill="#d8dacd"/>
+  <path d="M245 220h310v620H245z" fill="#6f876e"/>
+  <path d="M400 230v610" stroke="#314232" stroke-width="18"/>
+  <path d="M245 285 120 770h135zM555 285l125 485H545z" fill="#485f4b"/>
+  <text x="400" y="940" text-anchor="middle" font-family="Inter, Arial" font-size="42" font-weight="700" fill="#181818">Campera</text>
+</svg>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYM Reutiliza | Catalogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!--CSS Bootstrap-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!--CSS personal-->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="./img/logo-mym.jpg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Inicio">
+      <img class="brand-logo" src="img/logo-mym.jpg" alt="MYM Reutiliza">
+      <span>
+        <strong>MYM Reutiliza</strong>
+        <small>Ropa nueva y usada</small>
+      </span>
+    </a>
+
+    <nav class="header-nav" aria-label="Redes y contacto">
+      <a href="#productos">Catalogo</a>
+      <a href="#footer">Contacto</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <!--<p class="eyebrow">Catalogo online</p>-->
+      <h1>Used clothing con estilo propio.</h1>
+      <p>Prendas nuevas y usadas al mejor precio.</p>
+    </div>
+    <!--Si elimino esto se borran las imagenes-->
+    <div class="hero-rail" aria-hidden="true">
+      <img src="img/banner.png" alt="">
+      <!--<img src="img/remera.svg" alt="">
+      <img src="img/zapatillas.svg" alt="">-->
+    </div>
+    <!--Si elimino esto se borran las imagenes-->
+  </section>
+
+  <main>
+    <section id="productos" class="catalog-section">
+      <div class="section-heading">
+        <div>
+          <!--<p class="eyebrow">Stock publicado</p>-->
+          <h2>Catalogo</h2>
+        </div>
+        <label class="search">
+          <span>Buscar</span>
+          <input id="buscador" type="search" placeholder="Campera, talle M, usado...">
+        </label>
+      </div>
+
+      <div class="filters" aria-label="Filtros de productos">
+        <div>
+          <p>Categoria</p>
+          <div id="filtros-categorias" class="segmented"></div>
+        </div>
+        <div>
+          <p>Estado</p>
+          <div id="filtros-estados" class="segmented"></div>
+        </div>
+      </div>
+
+      <div id="contador" class="result-count" aria-live="polite"></div>
+      <div id="grid-productos" class="product-grid"></div>
+      <div id="sin-resultados" class="empty-state hidden">
+        <h3>No encontramos prendas con esos filtros.</h3>
+        <p>Proba con otra categoria, estado o busqueda.</p>
+      </div>
+    </section>
+  </main>
+
+  <a class="whatsapp-float" href="https://wa.me/59891826421?text=Hola!%20Quiero%20consultar%20por%20una%20prenda%20del%20catalogo" target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
+    <i class="bi bi-whatsapp"></i>
+  </a>
+
+  <footer id="footer" class="footer">
+    <div>
+      <strong>MYM Reutiliza</strong>
+      <p>Seleccion de ropa nueva y usada. Consultas, medidas y reservas por WhatsApp.</p>
+    </div>
+    <div>
+      <a href="https://www.instagram.com/mym2reutiliza/" target="_blank">
+        <span><i class="bi bi-instagram"></i></span>
+      </a>
+      <a href="https://www.facebook.com/people/Mym2reutiliza/61586812104403/?rdid=xERZKBEu9uENtMGY&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CPKYdf2DF%2F" target="_blank">
+        <span><i class="bi bi-facebook"></i></span>
+      </a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

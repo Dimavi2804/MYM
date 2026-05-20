@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f8f8f4"/>
+  <path d="M160 350c110-95 225-120 355-80 80 25 126 75 135 150 11 95-56 176-168 203-142 35-284-20-323-124-18-48-16-99 1-149z" fill="#d9e5e2"/>
+  <path d="M230 430c125 52 250 52 375 0" stroke="#222" stroke-width="18" fill="none"/>
+  <text x="400" y="805" text-anchor="middle" font-family="Inter, Arial" font-size="38" font-weight="700" fill="#181818">Algodon suave</text>
+</svg>
