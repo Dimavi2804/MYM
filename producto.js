@@ -35,6 +35,30 @@ function crearVideo(producto) {
   `;
 }
 
+function crearMenuCompartir(producto) {
+  const shareUrl = new URL(`producto.html?id=${producto.id}`, window.location.href).href;
+  const shareText = `Mira este producto de MYM Reutiliza: ${producto.nombre}`;
+
+  return `
+    <div class="share-box detail-share">
+      <button class="share-trigger" type="button" aria-label="Compartir ${producto.nombre}" aria-expanded="false" data-share-title="${producto.nombre}" data-share-text="${shareText}" data-share-url="${shareUrl}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <path d="M8.7 10.7 15.3 7.3"></path>
+          <path d="M8.7 13.3 15.3 16.7"></path>
+        </svg>
+      </button>
+      <div class="share-menu" role="menu">
+        <a role="menuitem" href="https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}" target="_blank" rel="noopener">WhatsApp</a>
+        <button role="menuitem" type="button" class="native-share-option" data-share-title="${producto.nombre}" data-share-text="${shareText}" data-share-url="${shareUrl}">Instagram</button>
+        <a role="menuitem" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+  `;
+}
+
 function renderizarProducto(producto) {
   const mensaje = encodeURIComponent(`Hola! Me interesa ${producto.nombre} talle ${producto.talle} que vi en la web.`);
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
@@ -54,7 +78,10 @@ function renderizarProducto(producto) {
 
       <article class="detail-copy">
         <p class="eyebrow">${capitalizar(producto.categoria)} / ${capitalizar(producto.estado)}</p>
-        <h1>${producto.nombre}</h1>
+        <div class="detail-title-row">
+          <h1>${producto.nombre}</h1>
+          ${crearMenuCompartir(producto)}
+        </div>
         <p class="detail-price">${formatearPrecio(producto.precio)}</p>
 
         <div class="detail-actions">
@@ -88,6 +115,66 @@ function renderizarProducto(producto) {
     document.querySelectorAll(".thumbs button").forEach((item) => item.classList.remove("active"));
     boton.classList.add("active");
   });
+}
+
+document.addEventListener("click", (event) => {
+  const botonCompartir = event.target.closest(".share-trigger");
+  const opcionNativa = event.target.closest(".native-share-option");
+
+  if (botonCompartir) {
+    const caja = botonCompartir.closest(".share-box");
+    const estaAbierta = caja.classList.contains("open");
+
+    document.querySelectorAll(".share-box.open").forEach((item) => {
+      item.classList.remove("open");
+      item.querySelector(".share-trigger")?.setAttribute("aria-expanded", "false");
+    });
+
+    caja.classList.toggle("open", !estaAbierta);
+    botonCompartir.setAttribute("aria-expanded", String(!estaAbierta));
+    return;
+  }
+
+  if (opcionNativa) {
+    compartirConAppInstalada(opcionNativa.dataset);
+    return;
+  }
+
+  if (!event.target.closest(".share-box")) {
+    document.querySelectorAll(".share-box.open").forEach((item) => {
+      item.classList.remove("open");
+      item.querySelector(".share-trigger")?.setAttribute("aria-expanded", "false");
+    });
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  document.querySelectorAll(".share-box.open").forEach((item) => {
+    item.classList.remove("open");
+    item.querySelector(".share-trigger")?.setAttribute("aria-expanded", "false");
+  });
+});
+
+async function compartirConAppInstalada({ shareTitle, shareText, shareUrl }) {
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: shareTitle,
+        text: shareText,
+        url: shareUrl
+      });
+      return;
+    }
+
+    await navigator.clipboard.writeText(shareUrl);
+    alert("Copiamos el link para que puedas pegarlo en Instagram.");
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      console.error(error);
+    }
+  }
 }
 
 async function cargarDetalle() {
