@@ -51,9 +51,18 @@ function crearMenuCompartir(producto) {
         </svg>
       </button>
       <div class="share-menu" role="menu">
-        <a role="menuitem" href="https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}" target="_blank" rel="noopener">WhatsApp</a>
-        <button role="menuitem" type="button" class="native-share-option" data-share-title="${producto.nombre}" data-share-text="${shareText}" data-share-url="${shareUrl}">Instagram</button>
-        <a role="menuitem" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener">Facebook</a>
+        <a class="share-option share-whatsapp" role="menuitem" href="https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}" target="_blank" rel="noopener">
+          <i class="bi bi-whatsapp"></i>
+          <span>WhatsApp</span>
+        </a>
+        <button class="share-option share-instagram native-share-option" role="menuitem" type="button" data-share-title="${producto.nombre}" data-share-text="${shareText}" data-share-url="${shareUrl}">
+          <i class="bi bi-instagram"></i>
+          <span>Instagram</span>
+        </button>
+        <a class="share-option share-facebook" role="menuitem" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener">
+          <i class="bi bi-facebook"></i>
+          <span>Facebook</span>
+        </a>
       </div>
     </div>
   `;
@@ -70,7 +79,15 @@ function renderizarProducto(producto) {
 
     <section class="product-detail">
       <div class="gallery">
-        <img id="imagen-principal" class="main-product-image" src="${producto.imagenes[0]}" alt="${producto.nombre}">
+        <div class="main-image-wrap">
+          <img id="imagen-principal" class="main-product-image" src="${producto.imagenes[0]}" alt="${producto.nombre}">
+          <button class="gallery-arrow gallery-arrow-left" type="button" data-direction="-1" aria-label="Ver imagen anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="gallery-arrow gallery-arrow-right" type="button" data-direction="1" aria-label="Ver imagen siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
         <div class="thumbs">
           ${crearMiniaturas(producto)}
         </div>
@@ -107,13 +124,31 @@ function renderizarProducto(producto) {
     ${crearVideo(producto)}
   `;
 
+  let imagenActual = 0;
+  const imagenPrincipal = document.querySelector("#imagen-principal");
+  const miniaturas = document.querySelectorAll(".thumbs button");
+
+  function mostrarImagen(index) {
+    imagenActual = (index + producto.imagenes.length) % producto.imagenes.length;
+    imagenPrincipal.src = producto.imagenes[imagenActual];
+
+    miniaturas.forEach((item, itemIndex) => {
+      item.classList.toggle("active", itemIndex === imagenActual);
+    });
+  }
+
   document.querySelector(".thumbs").addEventListener("click", (event) => {
     const boton = event.target.closest("button");
     if (!boton) return;
 
-    document.querySelector("#imagen-principal").src = boton.dataset.image;
-    document.querySelectorAll(".thumbs button").forEach((item) => item.classList.remove("active"));
-    boton.classList.add("active");
+    mostrarImagen([...miniaturas].indexOf(boton));
+  });
+
+  document.querySelector(".main-image-wrap").addEventListener("click", (event) => {
+    const boton = event.target.closest(".gallery-arrow");
+    if (!boton) return;
+
+    mostrarImagen(imagenActual + Number(boton.dataset.direction));
   });
 }
 
