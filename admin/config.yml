@@ -1,0 +1,35 @@
+# Configuración de Backend (Conexión con GitHub)
+backend:
+  name: github
+  repo: Dimavi2804/MYM
+  branch: main
+
+# Configuración de las imágenes
+media_folder: "img/productos" # Las fotos se guardarán en img/productos/
+public_folder: "img/productos"
+upload_dir: "img/productos"
+
+# Estructura de los datos
+collections:
+  - name: "productos"
+    label: "Productos"
+    folder: "datos" # El CMS creará una carpeta llamada "datos" con los archivos
+    create: true
+    slug: "{{slug}}"
+    extension: "json" # Queremos que nos guarde los datos en formato JSON
+    format: "json"
+    fields:
+      - { label: "ID Único", name: "id", widget: "number" }
+      - { label: "Nombre de la Prenda", name: "nombre", widget: "string" }
+      - { label: "Precio ($)", name: "precio", widget: "number" }
+      - { label: "Categoría", name: "categoria", widget: "select", options: ["camperas", "pantalones", "remeras", "buzos", "otros"] }
+      - { label: "Estado", name: "estado", widget: "select", options: ["nuevo", "usado"] }
+      - { label: "Talle", name: "talle", widget: "string" }
+      - { label: "Marca", name: "marca", widget: "string" }
+      - { label: "Color", name: "color", widget: "string" }
+      - { label: "Medidas", name: "medidas", widget: "string" }
+      - { label: "Descripción", name: "descripcion", widget: "text" }
+      - { label: "Imagen de Portada", name: "imagenPortada", widget: "image" }
+      - { label: "Imágenes de Detalle", name: "imagenesDetalle", widget: "list", field: { widget: "image", label: "Foto" } }
+      - { label: "Producto Activo en Web", name: "activo", widget: "boolean", default: true }
+      - { label: "Vendido / Agotado", name: "vendido", widget: "boolean", default: false }
