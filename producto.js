@@ -16,10 +16,16 @@ function capitalizar(texto) {
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
+function obtenerImagenesDetalle(producto) {
+  return producto.imagenesDetalle || producto.imagenes || [];
+}
+
 function crearMiniaturas(producto) {
-  return producto.imagenes.map((imagen, index) => `
+  const imagenes = obtenerImagenesDetalle(producto);
+
+  return imagenes.map((imagen, index) => `
     <button class="${index === 0 ? "active" : ""}" type="button" data-image="${imagen}" aria-label="Ver imagen ${index + 1}">
-      <img src="${imagen}" alt="${producto.nombre} miniatura ${index + 1}">
+      <img src="${imagen}" alt="${producto.nombre} miniatura ${index + 1}" loading="lazy">
     </button>
   `).join("");
 }
@@ -69,6 +75,8 @@ function crearMenuCompartir(producto) {
 }
 
 function renderizarProducto(producto) {
+  const imagenesDetalle = obtenerImagenesDetalle(producto);
+  const tieneVariasImagenes = imagenesDetalle.length > 1;
   const mensaje = encodeURIComponent(`Hola! Me interesa ${producto.nombre} talle ${producto.talle} que vi en la web.`);
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
 
@@ -80,11 +88,11 @@ function renderizarProducto(producto) {
     <section class="product-detail">
       <div class="gallery">
         <div class="main-image-wrap">
-          <img id="imagen-principal" class="main-product-image" src="${producto.imagenes[0]}" alt="${producto.nombre}">
-          <button class="gallery-arrow gallery-arrow-left" type="button" data-direction="-1" aria-label="Ver imagen anterior">
+          <img id="imagen-principal" class="main-product-image" src="${imagenesDetalle[0]}" alt="${producto.nombre}">
+          <button class="gallery-arrow gallery-arrow-left ${tieneVariasImagenes ? "" : "hidden"}" type="button" data-direction="-1" aria-label="Ver imagen anterior">
             <i class="bi bi-chevron-left"></i>
           </button>
-          <button class="gallery-arrow gallery-arrow-right" type="button" data-direction="1" aria-label="Ver imagen siguiente">
+          <button class="gallery-arrow gallery-arrow-right ${tieneVariasImagenes ? "" : "hidden"}" type="button" data-direction="1" aria-label="Ver imagen siguiente">
             <i class="bi bi-chevron-right"></i>
           </button>
         </div>
@@ -122,19 +130,47 @@ function renderizarProducto(producto) {
     </section>
 
     ${crearVideo(producto)}
+
+    <div id="image-lightbox" class="image-lightbox hidden" role="dialog" aria-modal="true" aria-label="Imagen ampliada de ${producto.nombre}">
+      <button class="lightbox-close" type="button" aria-label="Cerrar imagen ampliada">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <button class="lightbox-arrow lightbox-arrow-left ${tieneVariasImagenes ? "" : "hidden"}" type="button" data-direction="-1" aria-label="Ver imagen anterior">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <img id="lightbox-image" src="${imagenesDetalle[0]}" alt="${producto.nombre} ampliado">
+      <button class="lightbox-arrow lightbox-arrow-right ${tieneVariasImagenes ? "" : "hidden"}" type="button" data-direction="1" aria-label="Ver imagen siguiente">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
   `;
 
   let imagenActual = 0;
   const imagenPrincipal = document.querySelector("#imagen-principal");
   const miniaturas = document.querySelectorAll(".thumbs button");
+  const lightbox = document.querySelector("#image-lightbox");
+  const imagenLightbox = document.querySelector("#lightbox-image");
+  let touchStartX = 0;
+  let touchStartY = 0;
 
   function mostrarImagen(index) {
-    imagenActual = (index + producto.imagenes.length) % producto.imagenes.length;
-    imagenPrincipal.src = producto.imagenes[imagenActual];
+    imagenActual = (index + imagenesDetalle.length) % imagenesDetalle.length;
+    imagenPrincipal.src = imagenesDetalle[imagenActual];
+    imagenLightbox.src = imagenesDetalle[imagenActual];
 
     miniaturas.forEach((item, itemIndex) => {
       item.classList.toggle("active", itemIndex === imagenActual);
     });
+  }
+
+  function abrirLightbox() {
+    lightbox.classList.remove("hidden");
+    document.body.classList.add("lightbox-open");
+  }
+
+  function cerrarLightbox() {
+    lightbox.classList.add("hidden");
+    document.body.classList.remove("lightbox-open");
   }
 
   document.querySelector(".thumbs").addEventListener("click", (event) => {
@@ -146,9 +182,61 @@ function renderizarProducto(producto) {
 
   document.querySelector(".main-image-wrap").addEventListener("click", (event) => {
     const boton = event.target.closest(".gallery-arrow");
-    if (!boton) return;
+    if (boton) {
+      mostrarImagen(imagenActual + Number(boton.dataset.direction));
+      return;
+    }
 
-    mostrarImagen(imagenActual + Number(boton.dataset.direction));
+    if (event.target.closest("#imagen-principal")) {
+      abrirLightbox();
+    }
+  });
+
+  lightbox.addEventListener("click", (event) => {
+    const botonFlecha = event.target.closest(".lightbox-arrow");
+    const botonCerrar = event.target.closest(".lightbox-close");
+
+    if (botonFlecha) {
+      mostrarImagen(imagenActual + Number(botonFlecha.dataset.direction));
+      botonFlecha.blur();
+      return;
+    }
+
+    if (botonCerrar || event.target === lightbox) {
+      cerrarLightbox();
+    }
+  });
+
+  lightbox.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+    touchStartY = event.changedTouches[0].clientY;
+  }, { passive: true });
+
+  lightbox.addEventListener("touchend", (event) => {
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      mostrarImagen(imagenActual + (deltaX < 0 ? 1 : -1));
+    }
+  }, { passive: true });
+
+  document.addEventListener("keydown", (event) => {
+    if (lightbox.classList.contains("hidden")) return;
+
+    if (event.key === "Escape") {
+      cerrarLightbox();
+    }
+
+    if (event.key === "ArrowRight" && tieneVariasImagenes) {
+      mostrarImagen(imagenActual + 1);
+    }
+
+    if (event.key === "ArrowLeft" && tieneVariasImagenes) {
+      mostrarImagen(imagenActual - 1);
+    }
   });
 }
 
@@ -216,7 +304,7 @@ async function cargarDetalle() {
   try {
     const respuesta = await fetch("productos.json");
     const productos = await respuesta.json();
-    const producto = productos.find((item) => item.id === idProducto && item.activo);
+    const producto = productos.find((item) => item.id === idProducto && item.activo && item.vendido !== true);
 
     if (!producto) {
       contenedor.innerHTML = `

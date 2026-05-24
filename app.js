@@ -25,6 +25,10 @@ const grid = document.querySelector("#grid-productos");
 const contador = document.querySelector("#contador");
 const sinResultados = document.querySelector("#sin-resultados");
 const buscador = document.querySelector("#buscador");
+const botonVerMas = document.querySelector("#ver-mas");
+const PRODUCTOS_POR_PAGINA = 24;
+
+let cantidadVisible = PRODUCTOS_POR_PAGINA;
 
 function crearBotonesFiltros(items, contenedorId, tipo) {
   const contenedor = document.querySelector(contenedorId);
@@ -47,6 +51,7 @@ function crearBotonesFiltros(items, contenedorId, tipo) {
 
     contenedor.querySelectorAll("button").forEach((item) => item.classList.remove("active"));
     boton.classList.add("active");
+    cantidadVisible = PRODUCTOS_POR_PAGINA;
     renderizarProductos();
   });
 }
@@ -76,20 +81,22 @@ function obtenerProductosFiltrados() {
   return productos.filter((producto) => {
     const coincideCategoria = categoriaActual === "todos" || producto.categoria === categoriaActual;
     const coincideEstado = estadoActual === "todos" || producto.estado === estadoActual;
+    const estaPublicado = producto.activo && producto.vendido !== true;
 
-    return producto.activo && coincideCategoria && coincideEstado && coincideBusqueda(producto);
+    return estaPublicado && coincideCategoria && coincideEstado && coincideBusqueda(producto);
   });
 }
 
 function crearCard(producto) {
   const estado = producto.estado === "nuevo" ? "Nuevo" : "Usado";
   const detalleUrl = `producto.html?id=${producto.id}`;
+  const imagenCard = producto.imagenCard || producto.imagenes?.[0] || "";
 
   return `
     <article class="product-card">
       <a class="product-image-link" href="${detalleUrl}" aria-label="Ver detalle de ${producto.nombre}">
         <div class="product-image">
-          <img src="${producto.imagenes[0]}" alt="${producto.nombre}">
+          <img src="${imagenCard}" alt="${producto.nombre}" loading="lazy">
           <span class="badge">${estado}</span>
         </div>
       </a>
@@ -111,10 +118,12 @@ function crearCard(producto) {
 
 function renderizarProductos() {
   const filtrados = obtenerProductosFiltrados();
+  const visibles = filtrados.slice(0, cantidadVisible);
 
-  grid.innerHTML = filtrados.map(crearCard).join("");
-  contador.textContent = `${filtrados.length} ${filtrados.length === 1 ? "producto encontrado" : "productos encontrados"}`;
+  grid.innerHTML = visibles.map(crearCard).join("");
+  contador.textContent = `${visibles.length} de ${filtrados.length} ${filtrados.length === 1 ? "producto encontrado" : "productos encontrados"}`;
   sinResultados.classList.toggle("hidden", filtrados.length > 0);
+  botonVerMas.classList.toggle("hidden", visibles.length >= filtrados.length);
 }
 
 async function cargarProductos() {
@@ -132,6 +141,12 @@ async function cargarProductos() {
 
 buscador.addEventListener("input", (event) => {
   busquedaActual = event.target.value.trim();
+  cantidadVisible = PRODUCTOS_POR_PAGINA;
+  renderizarProductos();
+});
+
+botonVerMas.addEventListener("click", () => {
+  cantidadVisible += PRODUCTOS_POR_PAGINA;
   renderizarProductos();
 });
 
