@@ -59,6 +59,21 @@
       "medidas": "N/A",
       "id": "20260525000300",
       "marca": "Nike"
+    },
+    {
+      "imagenCard": "img/productos/y6akq5dhe1lop6k7gjd2.webp",
+      "color": "Blanco",
+      "estado": "usado",
+      "precio": 500,
+      "nombre": "CHALECO TEJIDO ZARA",
+      "descripcion": "Chaleco Zara usado en impecable estado.",
+      "vendido": false,
+      "activo": true,
+      "categoria": "remeras",
+      "talle": "M",
+      "medidas": "N/A",
+      "id": "20260525001500",
+      "marca": "Zara"
     }
   ]
 }
