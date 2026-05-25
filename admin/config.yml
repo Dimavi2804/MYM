@@ -1,6 +1,6 @@
 # Configuración de Backend (Conexión con GitHub)
 backend:
-  name: github
+  name: git-gateway
   repo: Dimavi2804/MYM
   branch: main
 
