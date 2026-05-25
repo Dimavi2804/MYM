@@ -126,7 +126,7 @@ function renderizarProductos() {
   botonVerMas.classList.toggle("hidden", visibles.length >= filtrados.length);
 }
 
-async function cargarProductos() {
+/*async function cargarProductos() {
   try {
     const respuesta = await fetch("productos.json");
     productos = await respuesta.json();
@@ -136,6 +136,25 @@ async function cargarProductos() {
     contador.textContent = "No se pudo cargar el catalogo.";
     sinResultados.classList.remove("hidden");
     console.error(error);
+  }
+}*/
+
+async function cargarProductos() {
+  try {
+    // CAMBIO 1: Apuntamos a la nueva carpeta 'datos' que crea el CMS
+    const respuesta = await fetch("datos/productos.json");
+    const datos = await respuesta.json();
+    
+    // CAMBIO 2: Decap guarda la lista dentro de una propiedad .productos 
+    // Si el archivo viene vacío o no existe, le asignamos un array vacío [] por seguridad
+    productos = datos.productos || []; 
+    
+    renderizarProductos();
+  } catch (error) {
+    grid.innerHTML = "";
+    contador.textContent = "No se pudo cargar el catalogo.";
+    sinResultados.classList.remove("hidden");
+    console.error("Error al leer el archivo del CMS:", error);
   }
 }
 
