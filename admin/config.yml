@@ -32,6 +32,6 @@ collections:
               - { label: "Medidas", name: "medidas", widget: "string" }
               - { label: "Descripción", name: "descripcion", widget: "text" }
               - { label: "Imagen de Portada (Card)", name: "imagenCard", widget: "image" }
-              - { label: "Imágenes de Detalle", name: "imagenesDetalle", widget: "list", field: { widget: "image", label: "Foto" } }
+              - { label: "Imágenes de Detalle", name: "imagenesDetalle", widget: "list", field: { label: "Foto", name: "url", widget: "image" } }
               - { label: "Producto Activo en Web", name: "activo", widget: "boolean", default: true }
               - { label: "Vendido / Agotado", name: "vendido", widget: "boolean", default: false }
