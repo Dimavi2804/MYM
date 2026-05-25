@@ -1,0 +1,21 @@
+{
+  "productos": [
+    {
+      "imagenCard": "img/productos/404476-03_global.webp",
+      "color": "Negro/Blanco",
+      "estado": "nuevo",
+      "precio": 4120,
+      "nombre": "Championes Puma Club Azura de Mujer",
+      "descripcion": "Excelentes championes Puma.",
+      "vendido": false,
+      "activo": true,
+      "categoria": "calzado",
+      "imagenesDetalle": [
+        "img/productos/404476-03_sv02.webp",
+        "img/productos/404476-03_sv01.webp"
+      ],
+      "talle": "38",
+      "marca": "Puma"
+    }
+  ]
+}
