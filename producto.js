@@ -16,8 +16,14 @@ function capitalizar(texto) {
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
-function obtenerImagenesDetalle(producto) {
+/*function obtenerImagenesDetalle(producto) {
   return producto.imagenesDetalle || producto.imagenes || [];
+}*/
+
+function obtenerImagenesDetalle(producto) {
+  const imagenes = producto.imagenesDetalle || producto.imagenes || [];
+  // Si las imágenes vienen del formato del CMS, extraemos solo el texto de la URL
+  return imagenes.map(img => typeof img === 'object' ? img.url : img);
 }
 
 function crearMiniaturas(producto) {
@@ -300,7 +306,7 @@ async function compartirConAppInstalada({ shareTitle, shareText, shareUrl }) {
   }
 }
 
-async function cargarDetalle() {
+/*async function cargarDetalle() {
   try {
     const respuesta = await fetch("productos.json");
     const productos = await respuesta.json();
@@ -326,6 +332,42 @@ async function cargarDetalle() {
       </section>
     `;
     console.error(error);
+  }
+}*/
+
+async function cargarDetalle() {
+  try {
+    // CAMBIO 1: Apuntamos a la nueva ruta donde el CMS guarda los datos
+    const respuesta = await fetch("datos/productos.json");
+    const datos = await respuesta.json();
+    
+    // CAMBIO 2: Extraemos la lista interna de productos usando 'datos.productos'
+    // Si por alguna razón viene vacío, le asignamos una lista vacía [] por seguridad
+    const listaProductos = datos.productos || [];
+    
+    // CAMBIO 3: Hacemos el .find() sobre la lista correcta (listaProductos)
+    const producto = listaProductos.find((item) => item.id === idProducto && item.activo && item.vendido !== true);
+
+    if (!producto) {
+      contenedor.innerHTML = `
+        <section class="empty-state">
+          <h1>Producto no encontrado</h1>
+          <p>Puede que el producto haya sido desactivado, vendido o que el link no sea correcto.</p>
+          <a class="primary-action" href="index.html">Volver al catalogo</a>
+        </section>
+      `;
+      return;
+    }
+
+    renderizarProducto(producto);
+  } catch (error) {
+    contenedor.innerHTML = `
+      <section class="empty-state">
+        <h1>No se pudo cargar el producto</h1>
+        <p>Hubo un error al conectar con la base de datos del catálogo.</p>
+      </section>
+    `;
+    console.error("Error al cargar el detalle desde el CMS:", error);
   }
 }
 
