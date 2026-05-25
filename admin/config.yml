@@ -1,25 +1,21 @@
-# Configuración de Backend (Conexión con GitHub)
 backend:
   name: git-gateway
   repo: Dimavi2804/MYM
   branch: main
 
-# Configuración de las imágenes
-media_folder: "img/productos" # Las fotos se guardarán en img/productos/
+media_folder: "img/productos"
 public_folder: "img/productos"
-upload_dir: "img/productos"
 
-# Estructura de los datos
 collections:
   - name: "configuracion"
     label: "Catálogo de Ropa"
-    delete: false # Para no borrar el catálogo sin querer
+    delete: false
     editor:
-      preview: false # Desactiva la vista previa fea de Decap
+      preview: false
     files:
       - name: "lista_productos"
         label: "Mis Prendas"
-        file: "datos/productos.json" # <--- ACÁ SE VA A GUARDAR TODO
+        file: "datos/productos.json"
         fields:
           - name: "productos"
             label: "Lista de Productos"
@@ -28,14 +24,14 @@ collections:
               - { label: "ID Único (Número)", name: "id", widget: "number", value_type: "int" }
               - { label: "Nombre de la Prenda", name: "nombre", widget: "string" }
               - { label: "Precio ($)", name: "precio", widget: "number", value_type: "int" }
-              - { label: "Categoría", name: "categoria", widget: "select", options: ["camperas", "pantalones", "remeras", "buzos", "otros"] }
+              - { label: "Categoría", name: "categoria", widget: "select", options: ["camperas", "pantalones", "remeras", "buzos", "polleras", "calzado", "otros"] }
               - { label: "Estado", name: "estado", widget: "select", options: ["nuevo", "usado"] }
               - { label: "Talle", name: "talle", widget: "string" }
               - { label: "Marca", name: "marca", widget: "string" }
               - { label: "Color", name: "color", widget: "string" }
               - { label: "Medidas", name: "medidas", widget: "string" }
               - { label: "Descripción", name: "descripcion", widget: "text" }
-              - { label: "Imagen de Portada (Card)", name: "imagenPortada", widget: "image" }
+              - { label: "Imagen de Portada (Card)", name: "imagenCard", widget: "image" }
               - { label: "Imágenes de Detalle", name: "imagenesDetalle", widget: "list", field: { widget: "image", label: "Foto" } }
               - { label: "Producto Activo en Web", name: "activo", widget: "boolean", default: true }
               - { label: "Vendido / Agotado", name: "vendido", widget: "boolean", default: false }
