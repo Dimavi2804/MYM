@@ -16,8 +16,8 @@ collections:
       - name: "lista_productos"
         label: "Mis Prendas"
         file: "datos/productos.json"
-        media_folder: "img/productos/{{fields.id}}"
-        public_folder: "img/productos/{{fields.id}}"
+        media_folder: "img/productos/{{slug}}"
+        public_folder: "img/productos/{{slug}}"
         fields:
           - name: "productos"
             label: "Lista de Productos"
