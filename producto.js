@@ -21,9 +21,25 @@ function capitalizar(texto) {
 }*/
 
 function obtenerImagenesDetalle(producto) {
-  const imagenes = producto.imagenesDetalle || producto.imagenes || [];
-  // Si las imágenes vienen del formato del CMS, extraemos solo el texto de la URL
-  return imagenes.map(img => typeof img === 'object' ? img.url : img);
+  // 1. Creamos una lista vacía para juntar todo
+  let todasLasImagenes = [];
+
+  // 2. Si el producto tiene imagen de portada (Card), la metemos primero en la lista
+  if (producto.imagenCard) {
+    todasLasImagenes.push(producto.imagenCard);
+  }
+
+  // 3. Si tiene imágenes de detalle, las limpiamos (manejando si viene objeto o texto) y las sumamos
+  if (producto.imagenesDetalle && Array.isArray(producto.imagenesDetalle)) {
+    const secundariasLimpias = producto.imagenesDetalle.map(img => typeof img === 'object' ? img.url : img);
+    todasLasImagenes = todasLasImagenes.concat(secundariasLimpias);
+  } else if (producto.imagenes && Array.isArray(producto.imagenes)) {
+    // Por si te quedó alguna prenda con el formato viejo
+    todasLasImagenes = todasLasImagenes.concat(producto.imagenes);
+  }
+
+  // 4. Si por esas casualidades no cargaste ninguna foto, devolvemos un array vacío para que no rompa
+  return todasLasImagenes;
 }
 
 function crearMiniaturas(producto) {
