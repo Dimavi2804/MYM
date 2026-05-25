@@ -18,6 +18,27 @@
       "medidas": "N/A",
       "id": 1,
       "marca": "Puma"
+    },
+    {
+      "imagenCard": "img/productos/jz6307_apparel-front-center-view.webp",
+      "color": "Azul",
+      "estado": "nuevo",
+      "precio": 3350,
+      "nombre": "Remera Argentina Originals Tee de Hombre",
+      "descripcion": "La camiseta Argentina Originals es un homenaje a la herencia y al estilo atrevido. Inspirada en la combinación de colores de la camiseta de segunda equipación, forma parte de la gama Authentic Originals, diseñada para que los aficionados lleven el espíritu del juego más allá del terreno de juego. El corte entallado crea una silueta moderna, mientras que el cuello redondo ofrece una comodidad clásica para el uso diario. El ligero tejido de punto proporciona transpirabilidad y un tacto suave. El icónico logotipo del trébol completa el look. Con su diseño inspirado en el fútbol, esta camiseta de adidas es una prenda que destaca, tanto si vas a un partido como si has quedado con tus amigos.",
+      "vendido": false,
+      "activo": true,
+      "categoria": "remeras",
+      "imagenesDetalle": [
+        "img/productos/jz6307_apparel-detail-view-1.webp",
+        "img/productos/jz6307_apparel-detail-view-2.webp",
+        "img/productos/jz6307_apparel-model-walking-view.webp",
+        "img/productos/jz6307_apparel-model-back-view.webp"
+      ],
+      "talle": "L",
+      "medidas": "N/A",
+      "id": 2,
+      "marca": "Adidas"
     }
   ]
 }
