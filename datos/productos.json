@@ -39,6 +39,26 @@
       "medidas": "N/A",
       "id": 2,
       "marca": "Adidas"
+    },
+    {
+      "imagenCard": "img/productos/fn3787-010_phsym001-2000.webp",
+      "color": "Negro",
+      "estado": "usado",
+      "precio": 998,
+      "nombre": "Pantalón Nike Club Bb de Hombre",
+      "descripcion": "Pantalón Nike en color negro.",
+      "vendido": false,
+      "activo": true,
+      "categoria": "pantalones",
+      "imagenesDetalle": [
+        "img/productos/fn3787-010_phsfm001-2000.webp",
+        "img/productos/fn3787-010_phsym009-2000.webp",
+        "img/productos/fn3787-010_phsym003-2000.webp"
+      ],
+      "talle": "L",
+      "medidas": "N/A",
+      "id": "20260525000300",
+      "marca": "Nike"
     }
   ]
 }
