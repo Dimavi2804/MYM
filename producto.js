@@ -2,7 +2,7 @@ const WHATSAPP_NUMBER = "59891826421";
 
 const contenedor = document.querySelector("#detalle-producto");
 const params = new URLSearchParams(window.location.search);
-const idProducto = Number(params.get("id"));
+const idProducto = (params.get("id"));
 
 function formatearPrecio(precio) {
   return new Intl.NumberFormat("es-UY", {
@@ -362,7 +362,7 @@ async function cargarDetalle() {
     const listaProductos = datos.productos || [];
     
     // CAMBIO 3: Hacemos el .find() sobre la lista correcta (listaProductos)
-    const producto = listaProductos.find((item) => item.id === idProducto && item.activo && item.vendido !== true);
+    const producto = listaProductos.find((item) => String(item.id) === idProducto && item.activo && item.vendido !== true);
 
     if (!producto) {
       contenedor.innerHTML = `

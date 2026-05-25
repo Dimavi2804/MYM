@@ -21,7 +21,7 @@ collections:
             label: "Lista de Productos"
             widget: "list"
             fields:
-              - { label: "ID Único", name: "id", widget: "datetime", format: "YYYYMMDDHHmmss", json_format: "YYYYMMDDHHmmss", default: "", required: true }
+              - { label: "ID Único (Automático)", name: "id", widget: "datetime", format: "YYYYMMDDHHmmss", value_format: "YYYYMMDDHHmmss", required: true }
               - { label: "Nombre de la Prenda", name: "nombre", widget: "string" }
               - { label: "Precio ($)", name: "precio", widget: "number", value_type: "int" }
               - { label: "Categoría", name: "categoria", widget: "select", options: ["camperas", "pantalones", "remeras", "buzos", "polleras", "calzado", "otros"] }
