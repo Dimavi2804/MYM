@@ -74,6 +74,23 @@
       "medidas": "N/A",
       "id": "20260525001500",
       "marca": "Zara"
+    },
+    {
+      "imagenCard": "img/productos/1779677532092-1779677531276-ee8e1e8e-1895-44d9-94b3-9b03f0a41d66_1536x1536.avif",
+      "color": "Marron",
+      "estado": "usado",
+      "precio": 1500,
+      "nombre": "Campera GAP usada",
+      "vendido": false,
+      "activo": true,
+      "categoria": "camperas",
+      "imagenesDetalle": [
+        "img/productos/1779677534708-1779677534642-169301e8-3c24-4df6-ae9d-93fd42ef9a67_1536x1536.avif"
+      ],
+      "talle": "XXL",
+      "medidas": "N/A",
+      "id": "20260525002200",
+      "marca": "GAP"
     }
   ]
 }
