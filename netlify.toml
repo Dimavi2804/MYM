@@ -1,0 +1,8 @@
+# Configuraciones generales de la construcción
+[build]
+  publish = "." # Le dice a Netlify que la web está en la carpeta raíz
+
+  # LA REGLA MÁGICA:
+  # Ejecuta un comando de Git que revisa si hubo cambios FUERA de 'datos' o 'img'.
+  # Si NO hubo cambios en el código principal (HTML/JS/CSS), devuelve "0" y cancela la construcción, ahorrando tus créditos.
+  ignore = "git diff --quiet HEAD^ HEAD -- . :!datos :!img"
