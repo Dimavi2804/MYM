@@ -26,7 +26,7 @@ function obtenerImagenesDetalle(producto) {
 
   // 2. Si el producto tiene imagen de portada (Card), la metemos primero en la lista
   if (producto.imagenCard) {
-    todasLasImagenes.push(producto.imagenCard);
+    todasLasImagenes.push(typeof producto.imagenCard === "object" ? producto.imagenCard.url : producto.imagenCard);
   }
 
   // 3. Si tiene imágenes de detalle, las limpiamos (manejando si viene objeto o texto) y las sumamos
@@ -99,7 +99,8 @@ function crearMenuCompartir(producto) {
 function renderizarProducto(producto) {
   const imagenesDetalle = obtenerImagenesDetalle(producto);
   const tieneVariasImagenes = imagenesDetalle.length > 1;
-  const mensaje = encodeURIComponent(`Hola! Me interesa ${producto.nombre} talle ${producto.talle} que vi en la web.`);
+  const productoUrl = new URL(`producto.html?id=${producto.id}`, window.location.href).href;
+  const mensaje = encodeURIComponent(`Hola! Me interesa ${producto.nombre} talle ${producto.talle} que vi en la web. Link: ${productoUrl}`);
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
 
   document.title = `${producto.nombre} | MYM Reutiliza`;
@@ -133,6 +134,10 @@ function renderizarProducto(producto) {
 
         <div class="detail-actions">
           <a class="primary-action" href="${whatsappUrl}" target="_blank" rel="noopener"> <i class="bi bi-whatsapp"></i> Consultar por WhatsApp</a>
+          <button class="secondary-action add-cart-button" type="button" data-product-id="${producto.id}">
+            <i class="bi bi-bag-plus"></i>
+            Agregar al carrito
+          </button>
           <a class="secondary-action" href="index.html">Seguir viendo</a>
         </div>
 
@@ -354,12 +359,18 @@ async function compartirConAppInstalada({ shareTitle, shareText, shareUrl }) {
 async function cargarDetalle() {
   try {
     // CAMBIO 1: Apuntamos a la nueva ruta donde el CMS guarda los datos
-    const respuesta = await fetch("datos/productos.json");
+    let respuesta = await fetch("datos/productos.json");
+    if (!respuesta.ok) {
+      respuesta = await fetch("Datos/productos.json");
+    }
+    if (!respuesta.ok) {
+      respuesta = await fetch("productos.json");
+    }
     const datos = await respuesta.json();
     
     // CAMBIO 2: Extraemos la lista interna de productos usando 'datos.productos'
     // Si por alguna razón viene vacío, le asignamos una lista vacía [] por seguridad
-    const listaProductos = datos.productos || [];
+    const listaProductos = Array.isArray(datos) ? datos : datos.productos || [];
     
     // CAMBIO 3: Hacemos el .find() sobre la lista correcta (listaProductos)
     const producto = listaProductos.find((item) => String(item.id) === idProducto && item.activo && item.vendido !== true);

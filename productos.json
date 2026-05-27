@@ -1,7 +1,7 @@
 ﻿[
     {
         "id":  1,
-        "nombre":  "Campera Nike Windrunner",
+        "nombre":  "Campera Nike Windrunner prueba prueba prueba prueba",
         "precio":  2590,
         "categoria":  "camperas",
         "estado":  "usado",
@@ -28,7 +28,7 @@
     },
     {
         "id":  2,
-        "nombre":  "Remera Adidas Classic",
+        "nombre":  "Remera Adidas Classic prueba prueba",
         "precio":  890,
         "categoria":  "remeras",
         "estado":  "usado",

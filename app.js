@@ -64,6 +64,11 @@ function formatearPrecio(precio) {
   }).format(precio);
 }
 
+function obtenerUrlImagen(imagen) {
+  if (!imagen) return "";
+  return typeof imagen === "object" ? imagen.url : imagen;
+}
+
 function coincideBusqueda(producto) {
   const texto = [
     producto.nombre,
@@ -90,7 +95,7 @@ function obtenerProductosFiltrados() {
 function crearCard(producto) {
   const estado = producto.estado === "nuevo" ? "Nuevo" : "Usado";
   const detalleUrl = `producto.html?id=${producto.id}`;
-  const imagenCard = producto.imagenCard || producto.imagenes?.[0] || "";
+  const imagenCard = obtenerUrlImagen(producto.imagenCard || producto.imagenes?.[0] || "");
 
   return `
     <article class="product-card">
@@ -111,6 +116,10 @@ function crearCard(producto) {
           <strong>${formatearPrecio(producto.precio)}</strong>
           <span>Talle ${producto.talle}</span>
         </div>
+        <button class="add-cart-button" type="button" data-product-id="${producto.id}">
+          <i class="bi bi-bag-plus"></i>
+          Agregar al carrito
+        </button>
       </div>
     </article>
   `;
@@ -142,12 +151,18 @@ function renderizarProductos() {
 async function cargarProductos() {
   try {
     // CAMBIO 1: Apuntamos a la nueva carpeta 'datos' que crea el CMS
-    const respuesta = await fetch("datos/productos.json");
+    let respuesta = await fetch("datos/productos.json");
+    if (!respuesta.ok) {
+      respuesta = await fetch("Datos/productos.json");
+    }
+    if (!respuesta.ok) {
+      respuesta = await fetch("productos.json");
+    }
     const datos = await respuesta.json();
     
     // CAMBIO 2: Decap guarda la lista dentro de una propiedad .productos 
     // Si el archivo viene vacío o no existe, le asignamos un array vacío [] por seguridad
-    productos = datos.productos || []; 
+    productos = Array.isArray(datos) ? datos : datos.productos || []; 
     
     renderizarProductos();
   } catch (error) {
