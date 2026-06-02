@@ -105,6 +105,9 @@ function crearCard(producto) {
           <span class="badge">${estado}</span>
         </div>
       </a>
+      <button class="card-cart-button add-cart-button" type="button" data-product-id="${producto.id}" aria-label="Agregar ${producto.nombre} al carrito">
+        <i class="bi bi-bag-plus"></i>
+      </button>
       <div class="product-info">
         <p>${producto.categoria}</p>
         <div class="product-title-row">
@@ -116,10 +119,6 @@ function crearCard(producto) {
           <strong>${formatearPrecio(producto.precio)}</strong>
           <span>Talle ${producto.talle}</span>
         </div>
-        <button class="add-cart-button" type="button" data-product-id="${producto.id}">
-          <i class="bi bi-bag-plus"></i>
-          Agregar al carrito
-        </button>
       </div>
     </article>
   `;
@@ -135,29 +134,12 @@ function renderizarProductos() {
   botonVerMas.classList.toggle("hidden", visibles.length >= filtrados.length);
 }
 
-/*async function cargarProductos() {
-  try {
-    const respuesta = await fetch("productos.json");
-    productos = await respuesta.json();
-    renderizarProductos();
-  } catch (error) {
-    grid.innerHTML = "";
-    contador.textContent = "No se pudo cargar el catalogo.";
-    sinResultados.classList.remove("hidden");
-    console.error(error);
-  }
-}*/
-
 async function cargarProductos() {
   try {
-    // CAMBIO 1: Apuntamos a la nueva carpeta 'datos' que crea el CMS
-    let respuesta = await fetch("datos/productos.json");
-    if (!respuesta.ok) {
-      respuesta = await fetch("Datos/productos.json");
-    }
-    if (!respuesta.ok) {
-      respuesta = await fetch("productos.json");
-    }
+    // CAMBIO 1: Apuntamos a la carpeta 'datos' que crea el CMS.
+    const respuesta = await fetch("datos/productos.json");
+    if (!respuesta.ok) throw new Error("No se pudo cargar el catalogo.");
+
     const datos = await respuesta.json();
     
     // CAMBIO 2: Decap guarda la lista dentro de una propiedad .productos 

@@ -1,7 +1,8 @@
 const CART_STORAGE_KEY = "mym-carrito";
-const CART_PRODUCTS_URLS = ["datos/productos.json", "Datos/productos.json", "productos.json"];
+const CART_PRODUCTS_URL = "datos/productos.json";
 
 let catalogoCarrito = [];
+let cartToastTimer;
 
 function precioNumero(valor) {
   return Number(valor) || 0;
@@ -30,17 +31,15 @@ function guardarCarrito(items) {
 async function cargarCatalogoCarrito() {
   if (catalogoCarrito.length > 0) return catalogoCarrito;
 
-  for (const url of CART_PRODUCTS_URLS) {
-    try {
-      const respuesta = await fetch(url);
-      if (!respuesta.ok) continue;
+  try {
+    const respuesta = await fetch(CART_PRODUCTS_URL);
+    if (!respuesta.ok) throw new Error("No se pudo cargar el catalogo.");
 
-      const datos = await respuesta.json();
-      catalogoCarrito = Array.isArray(datos) ? datos : datos.productos || [];
-      return catalogoCarrito;
-    } catch {
-      // Probamos la siguiente ruta disponible.
-    }
+    const datos = await respuesta.json();
+    catalogoCarrito = Array.isArray(datos) ? datos : datos.productos || [];
+    return catalogoCarrito;
+  } catch (error) {
+    console.error("Error al cargar los productos del carrito:", error);
   }
 
   catalogoCarrito = [];
@@ -92,8 +91,7 @@ async function agregarAlCarrito(id) {
   const producto = obtenerProductoCarrito(id);
 
   if (!producto || !producto.activo || producto.vendido === true) {
-    mostrarEstadoCarrito("No pudimos agregar ese producto. Puede estar vendido o no disponible.", "error");
-    abrirCarrito();
+    mostrarToastCarrito("No pudimos agregar ese producto. Puede estar vendido o no disponible.", "error");
     return;
   }
 
@@ -102,19 +100,18 @@ async function agregarAlCarrito(id) {
 
   if (existente) {
     if (existente.cantidad >= existente.stock) {
-      mostrarEstadoCarrito("No hay mas stock disponible para ese producto.", "error");
+      mostrarToastCarrito("No hay mas stock disponible para ese producto.", "error");
     } else {
       existente.cantidad += 1;
-      mostrarEstadoCarrito("Producto actualizado en el carrito.", "success");
+      mostrarToastCarrito("Producto agregado al carrito", "success");
     }
   } else {
     carrito.push(crearProductoCarrito(producto));
-    mostrarEstadoCarrito("Producto agregado al carrito.", "success");
+    mostrarToastCarrito("Producto agregado al carrito", "success");
   }
 
   guardarCarrito(carrito);
   renderizarCarrito();
-  abrirCarrito();
 }
 
 function cambiarCantidad(id, cambio) {
@@ -143,13 +140,20 @@ function eliminarProductoCarrito(id) {
 }
 
 function crearCarritoUI() {
+  if (!document.querySelector(".cart-header-button")) {
+    const nav = document.querySelector(".header-nav");
+    nav?.insertAdjacentHTML("beforeend", `
+      <button class="cart-header-button" type="button" aria-label="Abrir carrito">
+        <i class="bi bi-bag"></i>
+        <span id="cart-count">0</span>
+      </button>
+    `);
+  }
+
   if (document.querySelector("#cart-overlay")) return;
 
   document.body.insertAdjacentHTML("beforeend", `
-    <button class="cart-floating" type="button" aria-label="Abrir carrito">
-      <i class="bi bi-bag"></i>
-      <span id="cart-count">0</span>
-    </button>
+    <div id="cart-toast" class="cart-toast hidden" aria-live="polite"></div>
 
     <div id="cart-overlay" class="cart-overlay hidden" aria-hidden="true">
       <aside class="cart-panel" aria-label="Carrito de compras">
@@ -213,9 +217,11 @@ function renderizarCarrito() {
 
   contenedor.innerHTML = carrito.map((item) => `
     <article class="cart-item">
-      <img src="${item.imagen}" alt="${item.nombre}" loading="lazy">
+      <a class="cart-item-image" href="${item.url}" aria-label="Ver detalle de ${item.nombre}">
+        <img src="${item.imagen}" alt="${item.nombre}" loading="lazy">
+      </a>
       <div>
-        <h3>${item.nombre}</h3>
+        <a class="cart-item-title" href="${item.url}"><h3>${item.nombre}</h3></a>
         <p>Talle ${item.talle}</p>
         <strong>${formatearPrecioCarrito(item.precio)}</strong>
         <div class="cart-quantity">
@@ -234,6 +240,7 @@ function renderizarCarrito() {
 function abrirCarrito() {
   const overlay = document.querySelector("#cart-overlay");
   if (!overlay) return;
+  renderizarCarrito();
   overlay.classList.remove("hidden");
   overlay.setAttribute("aria-hidden", "false");
   document.body.classList.add("cart-open");
@@ -242,9 +249,14 @@ function abrirCarrito() {
 function cerrarCarrito() {
   const overlay = document.querySelector("#cart-overlay");
   if (!overlay) return;
-  overlay.classList.add("hidden");
-  overlay.setAttribute("aria-hidden", "true");
+  overlay.classList.add("closing");
   document.body.classList.remove("cart-open");
+
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    overlay.classList.remove("closing");
+    overlay.setAttribute("aria-hidden", "true");
+  }, 220);
 }
 
 function mostrarEstadoCarrito(mensaje, tipo = "success") {
@@ -256,19 +268,35 @@ function mostrarEstadoCarrito(mensaje, tipo = "success") {
   estado.classList.remove("hidden");
 }
 
+function mostrarToastCarrito(mensaje, tipo = "success") {
+  const toast = document.querySelector("#cart-toast");
+  if (!toast) return;
+
+  toast.textContent = mensaje;
+  toast.className = `cart-toast ${tipo}`;
+  toast.classList.remove("hidden");
+
+  clearTimeout(cartToastTimer);
+  cartToastTimer = setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 2000);
+}
+
 function validarFormularioPedido() {
   const form = document.querySelector("#checkout-form");
   const datos = Object.fromEntries(new FormData(form).entries());
   const campos = ["nombre", "apellido", "telefono", "email"];
 
   for (const campo of campos) {
-    if (!datos[campo]?.trim()) {
-      return { valido: false, mensaje: "Completá todos los datos de contacto." };
+    datos[campo] = datos[campo]?.trim() || "";
+    if (!datos[campo]) {
+      return { valido: false, mensaje: "Completa todos los datos de contacto." };
     }
   }
 
-  if (!datos.email.includes("@")) {
-    return { valido: false, mensaje: "Ingresá un email válido." };
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.email);
+  if (!emailValido) {
+    return { valido: false, mensaje: "Ingresa un email valido, por ejemplo nombre@dominio.com." };
   }
 
   return { valido: true, datos };
@@ -278,7 +306,7 @@ function crearMensajePedido(datosCliente) {
   const carrito = leerCarrito();
   const lineas = carrito.map((item, index) => {
     const subtotal = formatearPrecioCarrito(item.precio * item.cantidad);
-    return `${index + 1}. ${item.nombre}\n   Talle: ${item.talle}\n   Cantidad: ${item.cantidad}\n   Subtotal: ${subtotal}\n   Link: ${item.url}`;
+    return `${index + 1}. ${item.nombre}\n   Cantidad: ${item.cantidad}\n   Subtotal: ${subtotal}\n   Link: ${item.url}`;
   });
 
   return [
@@ -289,7 +317,7 @@ function crearMensajePedido(datosCliente) {
     `Email: ${datosCliente.email}`,
     "",
     "Productos:",
-    lineas.join("%0A%0A"),
+    lineas.join("\n\n"),
     "",
     `Total: ${formatearPrecioCarrito(totalCarrito())}`,
     "",
@@ -302,43 +330,43 @@ function finalizarCompra() {
   const form = document.querySelector("#checkout-form");
 
   if (carrito.length === 0) {
-    mostrarEstadoCarrito("Tu carrito está vacío. Agregá un producto antes de finalizar.", "error");
-    return;
-  }
-
-  if (form.classList.contains("hidden")) {
-    form.classList.remove("hidden");
-    mostrarEstadoCarrito("Completá tus datos para finalizar el pedido.", "success");
-    form.querySelector("input")?.focus();
+    mostrarEstadoCarrito("Tu carrito esta vacio. Agrega un producto antes de finalizar.", "error");
     return;
   }
 
   const validacion = validarFormularioPedido();
+
+  if (form.classList.contains("hidden") && !validacion.valido) {
+    form.classList.remove("hidden");
+    mostrarEstadoCarrito("Completa tus datos para finalizar el pedido.", "success");
+    form.querySelector("input")?.focus();
+    return;
+  }
+
   if (!validacion.valido) {
+    form.classList.remove("hidden");
     mostrarEstadoCarrito(validacion.mensaje, "error");
     return;
   }
 
   const mensaje = encodeURIComponent(crearMensajePedido(validacion.datos));
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
+  const ventana = window.open(url, "_blank");
 
-  const ventana = window.open(url, "_blank", "noopener");
   if (!ventana) {
-    window.location.href = url;
+    mostrarEstadoCarrito("No pudimos abrir WhatsApp. Revisa si el navegador bloqueo la ventana emergente.", "error");
+    return;
   }
 
   guardarCarrito([]);
   renderizarCarrito();
   form.reset();
   form.classList.add("hidden");
-  mostrarEstadoCarrito("Su pedido fue realizado con éxito. A la brevedad lo contactaremos. Muchas gracias.", "success");
+  mostrarEstadoCarrito("Su pedido fue realizado con exito. A la brevedad lo contactaremos. Muchas gracias.", "success");
 }
 
 function seguirComprando() {
   cerrarCarrito();
-  if (!window.location.pathname.endsWith("index.html") && window.location.pathname !== "/" && window.location.pathname !== "") {
-    window.location.href = "index.html#productos";
-  }
 }
 
 document.addEventListener("click", async (event) => {
@@ -348,7 +376,7 @@ document.addEventListener("click", async (event) => {
     return;
   }
 
-  if (event.target.closest(".cart-floating")) {
+  if (event.target.closest(".cart-header-button")) {
     abrirCarrito();
     return;
   }
@@ -381,6 +409,14 @@ document.addEventListener("click", async (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") cerrarCarrito();
+});
+
+window.addEventListener("pageshow", () => {
+  renderizarCarrito();
+});
+
+window.addEventListener("storage", (event) => {
+  if (event.key === CART_STORAGE_KEY) renderizarCarrito();
 });
 
 crearCarritoUI();

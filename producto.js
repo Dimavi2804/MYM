@@ -327,45 +327,12 @@ async function compartirConAppInstalada({ shareTitle, shareText, shareUrl }) {
   }
 }
 
-/*async function cargarDetalle() {
-  try {
-    const respuesta = await fetch("productos.json");
-    const productos = await respuesta.json();
-    const producto = productos.find((item) => item.id === idProducto && item.activo && item.vendido !== true);
-
-    if (!producto) {
-      contenedor.innerHTML = `
-        <section class="empty-state">
-          <h1>Producto no encontrado</h1>
-          <p>Puede que el producto haya sido desactivado o que el link no sea correcto.</p>
-          <a class="primary-action" href="index.html">Volver al catalogo</a>
-        </section>
-      `;
-      return;
-    }
-
-    renderizarProducto(producto);
-  } catch (error) {
-    contenedor.innerHTML = `
-      <section class="empty-state">
-        <h1>No se pudo cargar el producto</h1>
-        <p>Proba abrir el proyecto con Live Server o con un servidor local.</p>
-      </section>
-    `;
-    console.error(error);
-  }
-}*/
-
 async function cargarDetalle() {
   try {
     // CAMBIO 1: Apuntamos a la nueva ruta donde el CMS guarda los datos
-    let respuesta = await fetch("datos/productos.json");
-    if (!respuesta.ok) {
-      respuesta = await fetch("Datos/productos.json");
-    }
-    if (!respuesta.ok) {
-      respuesta = await fetch("productos.json");
-    }
+    const respuesta = await fetch("datos/productos.json");
+    if (!respuesta.ok) throw new Error("No se pudo cargar el producto.");
+
     const datos = await respuesta.json();
     
     // CAMBIO 2: Extraemos la lista interna de productos usando 'datos.productos'
