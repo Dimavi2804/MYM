@@ -47,8 +47,8 @@
       "precio": 998,
       "nombre": "Pantalón Nike Club Bb de Hombre",
       "descripcion": "Pantalón Nike en color negro.",
-      "vendido": true,
-      "activo": true,
+      "vendido": false,
+      "activo": false,
       "categoria": "pantalones",
       "imagenesDetalle": [
         "img/productos/fn3787-010_phsfm001-2000.webp",
