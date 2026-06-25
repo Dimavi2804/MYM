@@ -47,7 +47,7 @@
       "precio": 998,
       "nombre": "Pantalón Nike Club Bb de Hombre",
       "descripcion": "Pantalón Nike en color negro.",
-      "vendido": false,
+      "vendido": true,
       "activo": true,
       "categoria": "pantalones",
       "imagenesDetalle": [
@@ -81,6 +81,7 @@
       "estado": "usado",
       "precio": 1500,
       "nombre": "Campera GAP usada",
+      "descripcion": "Campera GAP usada",
       "vendido": false,
       "activo": true,
       "categoria": "camperas",
